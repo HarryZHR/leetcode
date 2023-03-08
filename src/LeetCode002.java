@@ -18,52 +18,84 @@ import java.util.List;
     给你两个非空的链表代表两个非负的整数，这些数字是反向存储的，而且每个节点都只有一个数字，将两个数字相加形成一个新的链表。
 
     你可以假定相加的两个数字不包括0开头，除了0本身
+
+
+ 输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+ 输出：[8,9,9,9,0,0,0,1]
  */
 public class LeetCode002 {
 
-     private ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-         List<Integer> intList1 = new ArrayList<>();
-         List<Integer> intList2 = new ArrayList<>();
-         intList1.add(l1.val);
-         intList2.add(l2.val);
-         while (l1.next != null){
-             l1 = l1.next;
-             intList1.add(l1.val);
-         }
-         while (l2.next != null){
-             l2 = l2.next;
-             intList2.add(l2.val);
-         }
-         Collections.reverse(intList1);
-         Collections.reverse(intList2);
-         List<Integer> results = new ArrayList<>();
-         if(intList1.size() >= intList2.size()){
-             for( int i = 0; i < intList1.size(); i++) {
-                 if(intList2.get(i) != null){
-                     int result = intList1.get(i) + intList2.get(i);
-                     if(result < 10){
-                         results.set(i,result + results.get(i));
-                     }else {
-                         results.set(i + 1, 1);
-                         results.set(i,result - 10 + results.get(i));
-                     }
-                 }
-             }
-         }
-         for (Integer i : results){
-             System.out.println(i);
-         }
-         return null;
-     }
+
+    /**
+     * 直接挨个相加 如果要进一 则将flag改成1，否则改成0，每次相加时都加上flag，
+     * 结果超过9时只保留个位，进一
+     * 如果一直到最后都还有进一 需要在尾巴上再加个1
+     * @param l1
+     * @param l2
+     * @return
+     */
+    private ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int flag = 0;
+        ListNode l3 = new ListNode(0);
+        ListNode l4 = l3;
+        while (l1 != null || l2 != null) {
+            int a = l1 == null ? 0 : l1.val;
+            int b = l2 == null ? 0 : l2.val;
+            int sum = a + b + flag;
+            if (sum > 9) {
+                l3.val = sum - 10;
+                flag = 1;
+            } else {
+                l3.val = sum;
+                flag = 0;
+            }
+            if (l1 != null) {
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                l2 = l2.next;
+            }
+            if (flag == 1) {
+                l3.next = new ListNode(1);
+            } else {
+                if (l1 != null || l2 != null) {
+                    l3.next = new ListNode(0);
+                }
+            }
+            l3 = l3.next;
+        }
+        return l4;
+    }
 
      public static void main(String[] args) {
          LeetCode002 l = new LeetCode002();
-         ListNode l1 = new ListNode(2);
-         l1.next = new ListNode(4);
-         l1.next.next = new ListNode(3);
+//         ListNode l1 = new ListNode(2);
+//         l1.next = new ListNode(4);
+//         l1.next.next = new ListNode(3);
+//         ListNode l2 = new ListNode(5);
+//         l2.next = new ListNode(6);
+//         l2.next.next = new ListNode(4);
+//         ListNode l1 = new ListNode(9);
+//         l1.next = new ListNode(9);
+//         l1.next.next = new ListNode(9);
+//         l1.next.next.next = new ListNode(9);
+//         l1.next.next.next.next = new ListNode(9);
+//         l1.next.next.next.next.next = new ListNode(9);
+//         l1.next.next.next.next.next.next = new ListNode(9);
+//         ListNode l2 = new ListNode(9);
+//         l2.next = new ListNode(9);
+//         l2.next.next = new ListNode(9);
+//         l2.next.next.next = new ListNode(9);
+//         ListNode l1 = new ListNode(0);
+//         ListNode l2 = new ListNode(0);
+         ListNode l1 = new ListNode(1);
+         l1.next = new ListNode(0);
+         l1.next.next = new ListNode(4);
+         l1.next.next.next = new ListNode(3);
          ListNode l2 = new ListNode(5);
          l2.next = new ListNode(6);
          l2.next.next = new ListNode(4);
+
          l.addTwoNumbers(l1,l2);
      }
 }
