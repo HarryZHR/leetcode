@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,10 +30,28 @@ import java.util.List;
  */
 public class LeetCode017 {
     public List<String> letterCombinations(String digits) {
-        char[] arr = digits.toCharArray();
+        if (digits.length() == 0) {
+            return new ArrayList<>();
+        }
+        List<String> list = new ArrayList<>();
+        list = Arrays.asList(getArray(digits.charAt(0)));
+        digits = digits.substring(1);
+        while (digits.length() > 0) {
+            list = letter(digits.charAt(0), list);
+            digits = digits.substring(1);
+        }
 
+        return list;
+    }
 
-        return null;
+    private List<String> letter(char first, List<String> list) {
+        List<String> res = new ArrayList<>();
+        for (String s : getArray(first)) {
+            for (String value : list) {
+                res.add(value + s);
+            }
+        }
+        return res;
     }
 
     private String[] getArray(char input) {
@@ -59,7 +79,7 @@ public class LeetCode017 {
 
     public static void main(String[] args) {
         LeetCode017 leetCode017 = new LeetCode017();
-        String digits = "23";
+        String digits = "";
         System.out.println(leetCode017.letterCombinations(digits));
     }
 }
